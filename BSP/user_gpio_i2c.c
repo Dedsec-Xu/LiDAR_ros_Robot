@@ -5,27 +5,19 @@ uint16_t gpio_i2c_scl_pin;
 GPIO_TypeDef *gpio_i2c_sda_gpiox;
 uint16_t gpio_i2c_sda_pin;
 
-#define IIC_SCL_LOW     (gpio_i2c_scl_gpiox->BRR = gpio_i2c_scl_pin)
+#define IIC_SCL_LOW     (gpio_i2c_scl_gpiox->BSRR = gpio_i2c_scl_pin<<16)//xjb cai de 
 #define IIC_SCL_HIGH    (gpio_i2c_scl_gpiox->BSRR = gpio_i2c_scl_pin)
-#define IIC_SDA_LOW     (gpio_i2c_sda_gpiox->BRR = gpio_i2c_sda_pin)
+#define IIC_SDA_LOW     (gpio_i2c_sda_gpiox->BSRR = gpio_i2c_sda_pin<<16)
 #define IIC_SDA_HIGH    (gpio_i2c_sda_gpiox->BSRR = gpio_i2c_sda_pin)
 
 
 #define READ_SDA        (gpio_i2c_sda_gpiox->IDR &gpio_i2c_sda_pin)
 
 
-#define SDA_IN()
-{
-    SDA_GPIO_Port->CRH &= 0XFFFF0FFF;
-    SDA_GPIO_Port->CRH |= 8 << 12;
-}
+#define SDA_IN() {SDA_GPIO_Port->OTYPER &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}
 
 
-#define SDA_OUT()
-{
-    SCL_GPIO_Port->CRH &= 0XFFFF0FFF;
-    SCL_GPIO_Port->CRH |= 3 << 12;
-}
+#define SDA_OUT() {SCL_GPIO_Port->OTYPER &= 0XFFFF0FFF;SCL_GPIO_Port->OTYPER |= 3 << 12;}
 
 void IIC_Init()
 {
@@ -76,7 +68,12 @@ void IIC_Send_Byte(uint8_t txd)
     IIC_SCL_LOW; //拉低时钟开始数据传输
     for (t = 0; t < 8; t++)
     {
-        IIC_SDA = (txd &0x80) >> 7;
+        if(((txd &0x80)>>7)==1){
+            IIC_SDA_HIGH;
+        }
+        else if(((txd &0x80)>>7)==0){
+            IIC_SCL_LOW;
+        }
         txd <<= 1;
         delay_us(1);
         IIC_SCL_HIGH;
@@ -143,7 +140,7 @@ void IIC_NAck(void)
     IIC_SCL_LOW; // SCL=0
     IIC_SDA_HIGH; // SDA=1
     delay_us(1);
-    iIIC_SCL_HIGH; // SCL=1
+    IIC_SCL_HIGH; // SCL=1
     delay_us(1);
     IIC_SCL_LOW; // SCL=0
     delay_us(1);
@@ -245,7 +242,7 @@ uint8_t IICWriteBit(uint8_t dev, uint8_t reg, uint8_t bitNum, uint8_t data)
     uint8_t b;
     IICreadByte(dev, reg, &b);
     b = (data != 0) ? (b | (1 << bitNum)) : (b &~(1 << bitNum));
-    return IICwriteByte(dev, reg, b);
+    return IICWriteByte(dev, reg, b);
 }
 
 uint8_t IICwriteBytes(uint8_t dev, uint8_t reg, uint8_t length, uint8_t *data)
@@ -266,7 +263,7 @@ uint8_t IICwriteBytes(uint8_t dev, uint8_t reg, uint8_t length, uint8_t *data)
     return 1; //status == 0;
 }
 
-uint8_t IICwriteBits(uint8_t dev, uint8_t reg, uint8_t bigStart, uint8_t length, uint8_t data)
+uint8_t IICwriteBits(uint8_t dev, uint8_t reg, uint8_t bitStart, uint8_t length, uint8_t data)
 {
     uint8_t b;
     if (IICreadByte(dev, reg, &b) != 0)
@@ -276,7 +273,7 @@ uint8_t IICwriteBits(uint8_t dev, uint8_t reg, uint8_t bigStart, uint8_t length,
         data >>= (7 - bitStart);
         b &= mask;
         b |= data;
-        return IICwriteByte(dev, reg, b);
+        return IICWriteByte(dev, reg, b);
     }
     else
     {

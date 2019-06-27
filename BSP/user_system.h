@@ -17,6 +17,17 @@
 #include <string.h>
 #include <math.h>
 
+
+#include "user_protcol.h"
+#include "user_comm.h"
+#include "driver_motor.h"
+#include "user_robot_base_2.h"
+#include "user_gpio_i2c.h"
+
+#define MPU6050
+#define EMPL_TARGET_STM32F4
+#include "imu_mpu6050.h"
+#include "imu.h"
 #define SYSTEM_VER 0x1708 //maybe need to change
 #define PI 3.1415926535898
 #define DEBUG
@@ -40,8 +51,6 @@ void user_delay_ms_start(uint32_t *tick);
 void user_delay_ms_end(uint32_t *tick,uint32_t Delay);
 
 
-//#include "user_protcol.h"
-#include "user_comm.h"
-#include "driver_motor.h"
-#include "user_robot_base_2.h"
+
+
 #endif /*__USER_SYSTEM_H_*/
