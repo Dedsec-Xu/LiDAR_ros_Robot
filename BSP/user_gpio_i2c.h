@@ -16,6 +16,7 @@ void IIC_NAck(void);
 int i2cWrite(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *data);
 int i2cRead(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *buf);
 
+uint8_t IICreadByte(uint8_t dev, uint8_t reg, uint8_t *data);
 uint8_t IICWriteByte(uint8_t dev, uint8_t reg, uint8_t data);
 uint8_t I2C_ReadOneByte(uint8_t I2C_Addr, uint8_t addr);
 uint8_t IICWriteBit(uint8_t dev, uint8_t reg, uint8_t bitNum, uint8_t data);

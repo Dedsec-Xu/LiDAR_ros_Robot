@@ -149,6 +149,70 @@ void IIC_NAck(void)
     delay_us(1);
 }
 
+int i2cWrite(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *data)
+{
+    int i;
+    if (!IIC_Start())
+    {
+        return 1;
+    }
+        
+    IIC_Send_Byte(addr << 1);
+    if (!IIC_Wait_Ack())
+    {
+        IIC_Stop();
+        return 1;
+    }
+    IIC_Send_Byte(reg);
+    IIC_Wait_Ack();
+    for (i = 0; i < len; i++)
+    {
+        IIC_Send_Byte(data[i]);
+        if (!IIC_Wait_Ack())
+        {
+            IIC_Stop();
+            return 0;
+        }
+    }
+    IIC_Stop();
+    return 0;
+}
+
+int i2cRead(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *buf)
+{
+    if (!IIC_Start())
+        return 1;
+    IIC_Send_Byte(addr << 1);
+    if (!IIC_Wait_Ack())
+    {
+        IIC_Stop();
+        return 1;
+    }
+    IIC_Send_Byte(reg);
+    IIC_Wait_Ack();
+    IIC_Start();
+    IIC_Send_Byte((addr << 1) + 1);
+    IIC_Wait_Ack();
+    while (len)
+    {
+        if (len == 1)
+            *
+            buf = IIC_Read_Byte(0);
+        else
+            *buf = IIC_Read_Byte(1);
+        buf++;
+        len--;
+    }
+    IIC_Stop();
+    return 0;
+}
+
+uint8_t IICreadByte(uint8_t dev, uint8_t reg, uint8_t *data)
+{
+    *data = I2C_ReadOneByte(dev, reg);
+    return 1;
+}
+
 uint8_t IICWriteByte(uint8_t dev, uint8_t reg, uint8_t data)
 {
     return IICwriteBytes(dev, reg, 1, &data);
