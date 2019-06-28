@@ -39,8 +39,8 @@
 #if defined EMPL_TARGET_STM32F4
 #include "i2c.h"   
 #include "main.h"
-#include "log.h"
-#include "board-st_discovery.h"
+#include "LIB/log.h"
+#include "LIB/board-st_discovery.h"
    
 #define i2c_write   i2cWrite
 #define i2c_read    i2cRead 

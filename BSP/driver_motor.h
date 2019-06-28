@@ -35,21 +35,21 @@ class motor_driver{
         void spin(int16_t pwm);
 
     private:
-    TIM_HandleTypeDef& _pwm_htim;
-    uint32_t _pwm_channel;
-    uint16_t _pwm_max;
-    GPIO_TypeDef* _gpiox_in;
-    uint16_t _pin_in1;
-    uint16_t _pin_in2;
+        TIM_HandleTypeDef& _pwm_htim;
+        uint32_t _pwm_channel;
+        uint16_t _pwm_max;
+        GPIO_TypeDef* _gpiox_in;
+        uint16_t _pin_in1;
+        uint16_t _pin_in2;
 
-    TIM_HandleTypeDef& _encoder_htim;
-    int32_t tick_last;
-    int32_t tick_cur;
-    int32_t tick_total;
-    int8_t _encoder_direction;
+        TIM_HandleTypeDef& _encoder_htim;
+        int32_t tick_last;
+        int32_t tick_cur;
+        int32_t tick_total;
+        int8_t _encoder_direction;
 
-    uint32_t last_milli_time;
-    static float _ticks_per_rev;
+        uint32_t last_milli_time;
+        static float _ticks_per_rev;
 };
 
 #endif

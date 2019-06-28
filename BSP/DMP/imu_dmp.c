@@ -75,10 +75,10 @@ struct platform_data_s {
  */
 
 
-static struct platform_data_s gyro_pdata; = {
-{ 1, 0, 0,
-0, 1, 0,
-0, 0, 1}
+static struct platform_data_s gyro_pdata = {
+    { 1, 0, 0,
+                     0, 1, 0,
+                     0, 0, 1}
 };
 
 #if defined MPU9150 || defined MPU9250
@@ -125,7 +125,7 @@ void DMP_init(void)
         print_usart1("mpu_set_sample_rate complete ......\r\n");
     if(!dmp_load_motion_driver_firmware())                //加载dmp固件
     print_usart1("dmp_load_motion_driver_firmware complete ......\r\n");
-    if(!dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation)))
+    if(!dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_pdata.orientation)))
         print_usart1("dmp_set_orientation complete ......\r\n"); //设置陀螺仪方向
     if(!dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP |
         DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |

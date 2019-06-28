@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "cmath": "c",
+        "log.h": "c"
+    }
+}

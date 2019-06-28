@@ -2,6 +2,7 @@
 #define __USER_PROTCOL_H_
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 enum _ptl_type{
 	VAL_START = 0,
 	VAL_POSE,
