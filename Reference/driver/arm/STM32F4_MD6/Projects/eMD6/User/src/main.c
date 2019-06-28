@@ -126,106 +126,7 @@ static struct platform_data_s compass_pdata = {
 #endif
 
 
-/* Private define ------------------------------------------------------------*/
 
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* ---------------------------------------------------------------------------*/
-/* Get data from MPL.
- * TODO: Add return values to the inv_get_sensor_type_xxx APIs to differentiate
- * between new and stale data.
- */
-static void read_from_mpl(void)
-{
-    long msg, data[9];
-    int8_t accuracy;
-    unsigned long timestamp;
-    float float_data[3] = {0};
-
-    if (inv_get_sensor_type_quat(data, &accuracy, (inv_time_t*)&timestamp)) {
-       /* Sends a quaternion packet to the PC. Since this is used by the Python
-        * test app to visually represent a 3D quaternion, it's sent each time
-        * the MPL has new data.
-        */
-        eMPL_send_quat(data);
-
-        /* Specific data packets can be sent or suppressed using USB commands. */
-        if (hal.report & PRINT_QUAT)
-            eMPL_send_data(PACKET_DATA_QUAT, data);
-    }
-
-    if (hal.report & PRINT_ACCEL) {
-        if (inv_get_sensor_type_accel(data, &accuracy,
-            (inv_time_t*)&timestamp))
-            eMPL_send_data(PACKET_DATA_ACCEL, data);
-    }
-    if (hal.report & PRINT_GYRO) {
-        if (inv_get_sensor_type_gyro(data, &accuracy,
-            (inv_time_t*)&timestamp))
-            eMPL_send_data(PACKET_DATA_GYRO, data);
-    }
-#ifdef COMPASS_ENABLED
-    if (hal.report & PRINT_COMPASS) {
-        if (inv_get_sensor_type_compass(data, &accuracy,
-            (inv_time_t*)&timestamp))
-            eMPL_send_data(PACKET_DATA_COMPASS, data);
-    }
-#endif
-    if (hal.report & PRINT_EULER) {
-        if (inv_get_sensor_type_euler(data, &accuracy,
-            (inv_time_t*)&timestamp))
-            eMPL_send_data(PACKET_DATA_EULER, data);
-    }
-    if (hal.report & PRINT_ROT_MAT) {
-        if (inv_get_sensor_type_rot_mat(data, &accuracy,
-            (inv_time_t*)&timestamp))
-            eMPL_send_data(PACKET_DATA_ROT, data);
-    }
-    if (hal.report & PRINT_HEADING) {
-        if (inv_get_sensor_type_heading(data, &accuracy,
-            (inv_time_t*)&timestamp))
-            eMPL_send_data(PACKET_DATA_HEADING, data);
-    }
-    if (hal.report & PRINT_LINEAR_ACCEL) {
-        if (inv_get_sensor_type_linear_acceleration(float_data, &accuracy, (inv_time_t*)&timestamp)) {
-        	MPL_LOGI("Linear Accel: %7.5f %7.5f %7.5f\r\n",
-        			float_data[0], float_data[1], float_data[2]);                                        
-         }
-    }
-    if (hal.report & PRINT_GRAVITY_VECTOR) {
-            if (inv_get_sensor_type_gravity(float_data, &accuracy,
-                (inv_time_t*)&timestamp))
-            	MPL_LOGI("Gravity Vector: %7.5f %7.5f %7.5f\r\n",
-            			float_data[0], float_data[1], float_data[2]);
-    }
-    if (hal.report & PRINT_PEDO) {
-        unsigned long timestamp;
-        get_tick_count(&timestamp);
-        if (timestamp > hal.next_pedo_ms) {
-            hal.next_pedo_ms = timestamp + PEDO_READ_MS;
-            unsigned long step_count, walk_time;
-            dmp_get_pedometer_step_count(&step_count);
-            dmp_get_pedometer_walk_time(&walk_time);
-            MPL_LOGI("Walked %ld steps over %ld milliseconds..\n", step_count,
-            walk_time);
-        }
-    }
-
-    /* Whenever the MPL detects a change in motion state, the application can
-     * be notified. For this example, we use an LED to represent the current
-     * motion state.
-     */
-    msg = inv_get_message_level_0(INV_MSG_MOTION_EVENT |
-            INV_MSG_NO_MOTION_EVENT);
-    if (msg) {
-        if (msg & INV_MSG_MOTION_EVENT) {
-            MPL_LOGI("Motion!\n");
-        } else if (msg & INV_MSG_NO_MOTION_EVENT) {
-            MPL_LOGI("No motion!\n");
-        }
-    }
-}
 
 #ifdef COMPASS_ENABLED
 void send_status_compass() {
@@ -271,53 +172,8 @@ static void setup_gyro(void)
     }
 }
 
-static void tap_cb(unsigned char direction, unsigned char count)
-{
-    switch (direction) {
-    case TAP_X_UP:
-        MPL_LOGI("Tap X+ ");
-        break;
-    case TAP_X_DOWN:
-        MPL_LOGI("Tap X- ");
-        break;
-    case TAP_Y_UP:
-        MPL_LOGI("Tap Y+ ");
-        break;
-    case TAP_Y_DOWN:
-        MPL_LOGI("Tap Y- ");
-        break;
-    case TAP_Z_UP:
-        MPL_LOGI("Tap Z+ ");
-        break;
-    case TAP_Z_DOWN:
-        MPL_LOGI("Tap Z- ");
-        break;
-    default:
-        return;
-    }
-    MPL_LOGI("x%d\n", count);
-    return;
-}
 
-static void android_orient_cb(unsigned char orientation)
-{
-	switch (orientation) {
-	case ANDROID_ORIENT_PORTRAIT:
-        MPL_LOGI("Portrait\n");
-        break;
-	case ANDROID_ORIENT_LANDSCAPE:
-        MPL_LOGI("Landscape\n");
-        break;
-	case ANDROID_ORIENT_REVERSE_PORTRAIT:
-        MPL_LOGI("Reverse Portrait\n");
-        break;
-	case ANDROID_ORIENT_REVERSE_LANDSCAPE:
-        MPL_LOGI("Reverse Landscape\n");
-        break;
-	default:
-		return;
-	}
-}
+
 
 
 static inline void run_self_test(void)
