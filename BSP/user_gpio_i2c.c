@@ -14,6 +14,11 @@ uint16_t gpio_i2c_sda_pin;
 #define READ_SDA        (gpio_i2c_sda_gpiox->IDR &gpio_i2c_sda_pin)
 
 
+// #define SDA_IN() {SDA_GPIO_Port->CRH &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}
+
+
+// #define SDA_OUT() {SCL_GPIO_Port->CRH &= 0XFFFF0FFF;SCL_GPIO_Port->OTYPER |= 3 << 12;}
+
 #define SDA_IN() {SDA_GPIO_Port->OTYPER &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}
 
 
