@@ -139,7 +139,7 @@ void DMP_init(void)
 
 }
 
-float Read_DMP(void)
+float* Read_DMP(void)
 {   
     unsigned long sensor_timestamp;
     unsigned char more;

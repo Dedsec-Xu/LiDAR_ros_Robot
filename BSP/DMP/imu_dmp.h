@@ -11,6 +11,6 @@ extern int16_t gyro[3],accel[3],sensors;
 extern float quat_rpy[7];
 
 void DMP_init(void);
-float Read_DMP(void);
+float* Read_DMP(void);
 
 #endif
