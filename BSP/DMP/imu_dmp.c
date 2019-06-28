@@ -60,6 +60,21 @@ struct hal_s {
 };
 
 
+
+/* Platform-specific information. Kinda like a boardfile. */
+struct platform_data_s {
+    signed char orientation[9];
+};
+
+/* The sensors can be mounted onto the board in any orientation. The mounting
+ * matrix seen below tells the MPL how to rotate the raw data from the
+ * driver(s).
+ * TODO: The following matrices refer to the configuration on internal test
+ * boards at Invensense. If needed, please modify the matrices to match the
+ * chip-to-body matrix for your particular set up.
+ */
+
+
 static struct platform_data_s gyro_pdata = {
     .orientation = { 1, 0, 0,
                      0, 1, 0,
@@ -88,6 +103,8 @@ static struct platform_data_s compass_pdata = {
 };
 #define COMPASS_ENABLED 1
 #endif
+
+
 
 static  unsigned short inv_row_2_scale(const signed char *row);
 static  unsigned short inv_orientation_matrix_to_scalar(const signed char *mtx);
