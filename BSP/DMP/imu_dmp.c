@@ -75,29 +75,29 @@ struct platform_data_s {
  */
 
 
-static struct platform_data_s gyro_pdata = {
-    .orientation = { 1, 0, 0,
-                     0, 1, 0,
-                     0, 0, 1}
+static struct platform_data_s gyro_pdata; = {
+{ 1, 0, 0,
+0, 1, 0,
+0, 0, 1}
 };
 
 #if defined MPU9150 || defined MPU9250
 static struct platform_data_s compass_pdata = {
-    .orientation = { 0, 1, 0,
+    { 0, 1, 0,
                      1, 0, 0,
                      0, 0, -1}
 };
 #define COMPASS_ENABLED 1
 #elif defined AK8975_SECONDARY
 static struct platform_data_s compass_pdata = {
-    .orientation = {-1, 0, 0,
+    {-1, 0, 0,
                      0, 1, 0,
                      0, 0,-1}
 };
 #define COMPASS_ENABLED 1
 #elif defined AK8963_SECONDARY
 static struct platform_data_s compass_pdata = {
-    .orientation = {-1, 0, 0,
+    {-1, 0, 0,
                      0,-1, 0,
                      0, 0, 1}
 };

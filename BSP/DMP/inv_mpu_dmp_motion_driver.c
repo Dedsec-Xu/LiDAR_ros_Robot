@@ -497,14 +497,7 @@ struct dmp_s {
     unsigned char packet_length;
 };
 
-static struct dmp_s dmp = {
-    tap_cb = NULL,
-    android_orient_cb = NULL,
-    orient = 0,
-    feature_mask = 0,
-    fifo_rate = 0,
-    packet_length = 0
-};
+static struct dmp_s dmp = {NULL,NULL,0,0,0,0};
 
 /**
  *  @brief  Load the DMP with this image.
