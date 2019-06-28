@@ -497,7 +497,14 @@ struct dmp_s {
     unsigned char packet_length;
 };
 
-static struct dmp_s dmp = {NULL,NULL,0,0,0,0};
+static struct dmp_s dmp = {
+    NULL,
+    NULL,
+    0,
+    0,
+    0,
+    0
+};
 
 /**
  *  @brief  Load the DMP with this image.

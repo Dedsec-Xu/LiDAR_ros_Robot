@@ -153,7 +153,7 @@ float* Read_DMP(void)
         q[3]=quat[3] / q30;
         RPY[0] = atan2(2*(q[2]*q[3] + q[0]*q[1]), 1-2*(q[1]*q[1]+q[2]*q[2]));
         RPY[1] = asin(2*(q[0]*q[2]-q[1]*q[3]));
-        RPY[2] = atan2(2*(q[0]*q[3] + q[1]*q[2]), 1-2*(q[3]*q[3]]+q[2]*q[2]));
+        RPY[2] = atan2(2*(q[0]*q[3] + q[1]*q[2]), 1-2*(q[3]*q[3]+q[2]*q[2]));
         
     }   
     return quat_rpy;
