@@ -498,12 +498,12 @@ struct dmp_s {
 };
 
 static struct dmp_s dmp = {
-    .tap_cb = NULL,
-    .android_orient_cb = NULL,
-    .orient = 0,
-    .feature_mask = 0,
-    .fifo_rate = 0,
-    .packet_length = 0
+    tap_cb = NULL,
+    android_orient_cb = NULL,
+    orient = 0,
+    feature_mask = 0,
+    fifo_rate = 0,
+    packet_length = 0
 };
 
 /**
