@@ -5,6 +5,7 @@ uint16_t gpio_i2c_scl_pin;
 GPIO_TypeDef *gpio_i2c_sda_gpiox;
 uint16_t gpio_i2c_sda_pin;
 
+//#define IIC_SCL_LOW     (gpio_i2c_scl_gpiox->BRR = gpio_i2c_scl_pin) 
 #define IIC_SCL_LOW     (gpio_i2c_scl_gpiox->BSRR = gpio_i2c_scl_pin<<16)//xjb cai de 
 #define IIC_SCL_HIGH    (gpio_i2c_scl_gpiox->BSRR = gpio_i2c_scl_pin)
 #define IIC_SDA_LOW     (gpio_i2c_sda_gpiox->BSRR = gpio_i2c_sda_pin<<16)
@@ -14,15 +15,20 @@ uint16_t gpio_i2c_sda_pin;
 #define READ_SDA        (gpio_i2c_sda_gpiox->IDR &gpio_i2c_sda_pin)
 
 
-// #define SDA_IN() {SDA_GPIO_Port->CRH &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}
+// #define SDA_IN() {SDA_GPIO_Port->CRH &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}//定义为输入模式
 
 
-// #define SDA_OUT() {SCL_GPIO_Port->CRH &= 0XFFFF0FFF;SCL_GPIO_Port->OTYPER |= 3 << 12;}
+// #define SDA_OUT() {SCL_GPIO_Port->CRH &= 0XFFFF0FFF;SCL_GPIO_Port->OTYPER |= 3 << 12;}//推挽输出
 
-#define SDA_IN() {SDA_GPIO_Port->OTYPER &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}
+// #define SDA_IN() {SDA_GPIO_Port->OTYPER &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}
 
 
-#define SDA_OUT() {SCL_GPIO_Port->OTYPER &= 0XFFFF0FFF;SCL_GPIO_Port->OTYPER |= 3 << 12;}
+// #define SDA_OUT() {SCL_GPIO_Port->OTYPER &= 0XFFFF0FFF;SCL_GPIO_Port->OTYPER |= 3 << 12;}
+
+#define SDA_IN() {SDA_GPIO_Port->regs->CRH &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}//定义为输入模式
+
+
+#define SDA_OUT() {SCL_GPIO_Port->regs->CRH &= 0XFFFF0FFF;SCL_GPIO_Port->OTYPER |= 3 << 12;}//推挽输出
 
 void IIC_Init()
 {
