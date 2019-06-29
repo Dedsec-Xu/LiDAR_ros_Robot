@@ -47,7 +47,6 @@ void user_system_init(){
 	IIC_Init();
 	MPU6050_init();
 	DMP_init();
-	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_RESET);
 	HAL_IWDG_Refresh(&hiwdg1);
 	user_comm_init();
 	
@@ -101,8 +100,8 @@ void user_system_thread_0(){
 	print_usart1("user_system_thread_0() start...\r\n");
 	//xrobot->velocity_to_RPM(100.0,10.0);
 	while(1){
+		HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_SET);//开始运行时LED亮起
 		user_delay_ms_start(&loop_tick);
-		HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_SET);
 		xrobot->velocity_to_RPM(cmd_liner_vel_x,cmd_angular_rad_z);//此处上位机输入数据
 		serial2_ros_data();//此处向上位机传输数据
 		motor_driver::_p = set_p;
@@ -110,6 +109,7 @@ void user_system_thread_0(){
 		motor_driver::_d = set_d;
 		HAL_IWDG_Refresh(&hiwdg1);
 		print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
+		HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_RESET);//一个周期运行结束后LED熄灭
 		user_delay_ms_end(&loop_tick,1000/rate);
 	}
 }
