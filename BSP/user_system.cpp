@@ -61,6 +61,7 @@ void user_system_init(){
 		HAL_IWDG_Refresh(&hiwdg1);
 		HAL_Delay(100);
 	}
+	print_usart1("DMP initialization End\r\n");//等待20秒后DMP初始化完成
 	
 }
 
