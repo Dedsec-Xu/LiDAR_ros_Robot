@@ -45,11 +45,9 @@ void user_system_init(){
 	int wait_imu = 200;
 	xrobot = new robot_base;
 	IIC_Init();
-	HAL_Delay(50);
 	MPU6050_init();
 	DMP_init();
 	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_RESET);
-	HAL_Delay(500);
 	HAL_IWDG_Refresh(&hiwdg1);
 	user_comm_init();
 	
