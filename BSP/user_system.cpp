@@ -38,16 +38,16 @@ void user_test(){
 }
 
 void user_system_init(){
-	char show[32];
+	//char show[32];//似乎适用于OLED的 可以考虑删除
 	
 	
-	//print_usart1("user_system_init() End\r\n");
+	print_usart1("user_system_init() End\r\n");
 	int wait_imu = 200;
 	xrobot = new robot_base;
 	IIC_Init();
 	HAL_Delay(50);
-	//MPU6050_init();
-	//DMP_init();
+	MPU6050_init();
+	DMP_init();
 	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_RESET);
 	HAL_Delay(500);
 	HAL_IWDG_Refresh(&hiwdg1);
@@ -56,14 +56,14 @@ void user_system_init(){
 	HAL_IWDG_Refresh(&hiwdg1);
 	
 	HAL_TIM_Base_Start_IT(&htim6);
-	//print_usart1("user_system_init() End\r\n");
+	print_usart1("user_system_init() End\r\n");
 	
-	//while(wait_imu--){
-		//Read_DMP();
-		//sprintf(show,"DMP callbration %3d",wait_imu);
-		//HAL_IWDG_Refresh(&hiwdg1);
-		//HAL_Delay(100);
-	//}
+	while(wait_imu--){//DMP延时20秒钟之后输出
+		Read_DMP();
+		//print_usart1(show,"DMP callbration %3d",wait_imu);
+		HAL_IWDG_Refresh(&hiwdg1);
+		HAL_Delay(100);
+	}
 	
 }
 
@@ -98,22 +98,20 @@ void user_system_init(){
 // }
 
 void user_system_thread_0(){
-	uint8_t rate = 10;
+	uint8_t rate = 10;//10Hz
 	
-	//print_usart1("user_system_thread_0() start...\r\n");
+	print_usart1("user_system_thread_0() start...\r\n");
 	//xrobot->velocity_to_RPM(100.0,10.0);
 	while(1){
 		user_delay_ms_start(&loop_tick);
 		HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_SET);
-		//HAL_Delay(500);
-		
-		xrobot->velocity_to_RPM(1.0,0.0);
-		serial2_ros_data();
+		xrobot->velocity_to_RPM(cmd_liner_vel_x,cmd_angular_rad_z);//此处上位机输入数据
+		serial2_ros_data();//此处向上位机传输数据
 		motor_driver::_p = set_p;
 		motor_driver::_i = set_i;
 		motor_driver::_d = set_d;
 		HAL_IWDG_Refresh(&hiwdg1);
-		//print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
+		print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
 		user_delay_ms_end(&loop_tick,1000/rate);
 	}
 }
