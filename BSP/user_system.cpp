@@ -44,9 +44,9 @@ void user_system_init(){
 	print_usart1("user_system_init() End\r\n");
 	int wait_imu = 200;
 	xrobot = new robot_base;
-	IIC_Init();
-	MPU6050_init();
-	DMP_init();
+	IIC_Init();//可能有问题
+	MPU6050_init();//可能有问题
+	DMP_init();//可能有问题
 	HAL_IWDG_Refresh(&hiwdg1);
 	user_comm_init();
 	
