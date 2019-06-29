@@ -39,6 +39,11 @@
 "h743zi\user_comm.o"
 "h743zi\driver_motor.o"
 "h743zi\user_robot_base_2.o"
+"h743zi\user_gpio_i2c.o"
+"h743zi\imu_mpu6050.o"
+"h743zi\imu_dmp.o"
+"h743zi\inv_mpu.o"
+"h743zi\inv_mpu_dmp_motion_driver.o"
 --library_type=microlib --strict --scatter "H743ZI\H743ZI.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -27,7 +27,8 @@
 #define MPU6050
 #define EMPL_TARGET_STM32F4
 #include "imu_mpu6050.h"
-#include "imu.h"
+//#include "imu.h"
+#include "DMP/imu_dmp.h"
 #define SYSTEM_VER 0x1708 //maybe need to change
 #define PI 3.1415926535898
 #define DEBUG

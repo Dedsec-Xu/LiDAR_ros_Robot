@@ -22,7 +22,7 @@ Dialog DLL:      TCM.DLL V1.36.2.0
  
 <h2>Project:</h2>
 C:\Users\LENOVO\Documents\H743ZI\MDK-ARM\H743ZI.uvprojx
-Project File Date:  06/26/2019
+Project File Date:  06/28/2019
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'D:\Keil_v5\ARM\ARMCC\Bin'
@@ -30,13 +30,21 @@ Project File Date:  06/26/2019
   
 Build target 'H743ZI'
 compiling user_system.cpp...
-..\BSP\user_system.cpp(102): warning:  #1-D: last line of file ends without a newline
-  }
-..\BSP\user_system.cpp: 1 warning, 0 errors
+..\BSP\user_system.cpp(41): warning:  #177-D: variable "show"  was declared but never referenced
+  	char show[32];
+..\BSP\user_system.cpp(45): warning:  #177-D: variable "wait_imu"  was declared but never referenced
+  	int wait_imu = 200;
+..\BSP\user_system.cpp(143): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	rpy_cur[0] = quar_rpy[4] + PI;
+..\BSP\user_system.cpp(144): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	rpy_cur[1] = quar_rpy[5] + PI;
+..\BSP\user_system.cpp(145): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  	rpy_cur[2] = quar_rpy[6] + PI;
+..\BSP\user_system.cpp: 5 warnings, 0 errors
 linking...
-Program Size: Code=42188 RO-data=724 RW-data=100 ZI-data=3244  
+Program Size: Code=46904 RO-data=812 RW-data=224 ZI-data=3480  
 FromELF: creating hex file...
-"H743ZI\H743ZI.axf" - 0 Error(s), 1 Warning(s).
+"H743ZI\H743ZI.axf" - 0 Error(s), 5 Warning(s).
 
 <h2>Software Packages used:</h2>
 

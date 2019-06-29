@@ -82,6 +82,8 @@ void Error_Handler(void);
 #define U3_PWM_GPIO_Port GPIOE
 #define U4_PWM_Pin GPIO_PIN_14
 #define U4_PWM_GPIO_Port GPIOE
+#define LED3_Pin GPIO_PIN_14
+#define LED3_GPIO_Port GPIOB
 #define U1_1_Pin GPIO_PIN_7
 #define U1_1_GPIO_Port GPIOC
 #define U2_1_Pin GPIO_PIN_8

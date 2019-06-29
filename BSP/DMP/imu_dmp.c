@@ -76,28 +76,28 @@ struct platform_data_s {
 
 
 static struct platform_data_s gyro_pdata = {
-    .orientation = { 1, 0, 0,
+    { 1, 0, 0,
                      0, 1, 0,
                      0, 0, 1}
 };
 
 #if defined MPU9150 || defined MPU9250
 static struct platform_data_s compass_pdata = {
-    .orientation = { 0, 1, 0,
+    { 0, 1, 0,
                      1, 0, 0,
                      0, 0, -1}
 };
 #define COMPASS_ENABLED 1
 #elif defined AK8975_SECONDARY
 static struct platform_data_s compass_pdata = {
-    .orientation = {-1, 0, 0,
+    {-1, 0, 0,
                      0, 1, 0,
                      0, 0,-1}
 };
 #define COMPASS_ENABLED 1
 #elif defined AK8963_SECONDARY
 static struct platform_data_s compass_pdata = {
-    .orientation = {-1, 0, 0,
+    {-1, 0, 0,
                      0,-1, 0,
                      0, 0, 1}
 };
@@ -125,7 +125,7 @@ void DMP_init(void)
         print_usart1("mpu_set_sample_rate complete ......\r\n");
     if(!dmp_load_motion_driver_firmware())                //加载dmp固件
     print_usart1("dmp_load_motion_driver_firmware complete ......\r\n");
-    if(!dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation)))
+    if(!dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_pdata.orientation)))
         print_usart1("dmp_set_orientation complete ......\r\n"); //设置陀螺仪方向
     if(!dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP |
         DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
@@ -139,7 +139,7 @@ void DMP_init(void)
 
 }
 
-float Read_DMP(void)
+float* Read_DMP(void)
 {   
     unsigned long sensor_timestamp;
     unsigned char more;
@@ -153,7 +153,7 @@ float Read_DMP(void)
         q[3]=quat[3] / q30;
         RPY[0] = atan2(2*(q[2]*q[3] + q[0]*q[1]), 1-2*(q[1]*q[1]+q[2]*q[2]));
         RPY[1] = asin(2*(q[0]*q[2]-q[1]*q[3]));
-        RPY[2] = atan2(2*(q[0]*q[3] + q[1]*q[2]), 1-2*(q[3]*q[3]]+q[2]*q[2]));
+        RPY[2] = atan2(2*(q[0]*q[3] + q[1]*q[2]), 1-2*(q[3]*q[3]+q[2]*q[2]));
         
     }   
     return quat_rpy;

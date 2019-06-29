@@ -1,0 +1,7 @@
+文档说明：
+
+Motion Driver 6.12-移植指南
+Motion Driver 6.12  - 入门指南
+Motion Driver 6.12  - 功能用户指南
+为 ...motion_driver_6.12\motion_driver_6.12\documentation
+中App Note 1\2\3的中文翻译

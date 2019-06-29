@@ -109,13 +109,14 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 	user_system_init();
+	user_system_thread_0();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		user_system_thread_0();
+		
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -211,7 +212,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
+  if(htim == &htim6){
+		if(cmd_flag >= 10){
+			cmd_liner_vel_x = cmd_liner_vel_y = cmd_angular_rad_z = 0;
+		}
+		else{
+			cmd_flag++;
+		}
+	}
   /* USER CODE END Callback 1 */
 }
 

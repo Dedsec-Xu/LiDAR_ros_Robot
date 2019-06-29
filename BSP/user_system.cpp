@@ -1,5 +1,19 @@
 #include "user_system.h"
+#include "user_protcol.h"
 
+#define IMU_PUBLISH_RATE 10
+#define VEL_PUBLISH_RATE 10
+#define COMMAND_RATE 10
+#define DEBUG_RATE 10
+#define DEFAULT_RATE 10
+
+uint8_t cmd_flag = 0;
+
+float liner_vel_min = 0.2;
+float liner_vel_max = 1.0;
+float liner_vel_cur = 0.6;
+
+float angular_rad_min = 0.8;
 float angular_rad_max = 6.2;
 float angular_rad_cur = 1.0;
 
@@ -25,24 +39,31 @@ void user_test(){
 
 void user_system_init(){
 	char show[32];
+	
+	
+	//print_usart1("user_system_init() End\r\n");
 	int wait_imu = 200;
 	xrobot = new robot_base;
 	IIC_Init();
 	HAL_Delay(50);
-	MPU6050_init();
-	DMP_init();
-
+	//MPU6050_init();
+	//DMP_init();
+	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_RESET);
+	HAL_Delay(500);
 	HAL_IWDG_Refresh(&hiwdg1);
 	user_comm_init();
-	HAL_TIM_Base_Start_IT(&htim6);
-	print_usart1("user_system_init() End\r\n");
 	
-	while(wait_imu--){
-		Read_DMP();
-		sprintf(show,"DMP callbration %3d",wait_imu);
-		HAL_IWDG_Refresh(&hiwdg1);
-		HAL_Delay(100);
-	}
+	HAL_IWDG_Refresh(&hiwdg1);
+	
+	HAL_TIM_Base_Start_IT(&htim6);
+	//print_usart1("user_system_init() End\r\n");
+	
+	//while(wait_imu--){
+		//Read_DMP();
+		//sprintf(show,"DMP callbration %3d",wait_imu);
+		//HAL_IWDG_Refresh(&hiwdg1);
+		//HAL_Delay(100);
+	//}
 	
 }
 
@@ -78,31 +99,34 @@ void user_system_init(){
 
 void user_system_thread_0(){
 	uint8_t rate = 10;
-	print_usart1("user_system_thread_0() start...\r\n");
-	xrobot->velocity_to_RPM(0.0,10.0);
+	
+	//print_usart1("user_system_thread_0() start...\r\n");
+	//xrobot->velocity_to_RPM(100.0,10.0);
 	while(1){
 		user_delay_ms_start(&loop_tick);
+		HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_SET);
+		//HAL_Delay(500);
 		
-		xrobot->velocity_to_RPM(cmd_liner_vel_x,cmd_angular_rad_z);
+		xrobot->velocity_to_RPM(1.0,0.0);
 		serial2_ros_data();
 		motor_driver::_p = set_p;
 		motor_driver::_i = set_i;
 		motor_driver::_d = set_d;
 		HAL_IWDG_Refresh(&hiwdg1);
-		print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
+		//print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
 		user_delay_ms_end(&loop_tick,1000/rate);
 	}
 }
 
 void serial2_ros_data(){
-	float rpy_last[3] = {0};
+	float rpy_cur[3] = {0};
 	static float rpy_last[3] = {PI,PI,PI};
 	static serialData data;
 	data.syn = _SERIAL_SYN_CODE_START;
 	data.syn_CR = '\r';
 	data.syn_LF = '\n';
 	float *quar_rpy;
-
+	
 	while(HAL_UART_GetState(&huart4) == HAL_UART_STATE_BUSY_TX_RX){}
 	data.type = VAL_POSE;
 	data.dat.vel.liner[0] = xrobot->robot_linear_vel_x;
@@ -127,9 +151,29 @@ void serial2_ros_data(){
 	
 
 	HAL_UART_Transmit_DMA(&huart4,(uint8_t*)&data,sizeof(data));
-	print_usart1("Roll [%f] Pitch[%f] Yaw[%f]\r\n",data.dat.vel.angular[0]*57.3,data.dat.vel.angular[1]*57.3,data.dat.vel.angular[2]*57.3);
+	//print_usart1("Roll [%f] Pitch[%f] Yaw[%f]\r\n",data.dat.vel.angular[0]*57.3,data.dat.vel.angular[1]*57.3,data.dat.vel.angular[2]*57.3);
 }
 
 void user_delay_us(uint32_t us){
+	us *= 9;
+	while(us--){
+		__nop();
+	}
+}
 
+float get_inc(float& last,float cur,float max){
+	float inc;
+	if(abs(cur-last)>max/2){
+		if(cur>last){
+			inc = -max -last +cur;
+		}
+		else{
+			inc = max -last +cur;
+		}
+	}
+	else{
+		inc = cur - last;
+	}
+	last = cur;
+	return inc;
 }
