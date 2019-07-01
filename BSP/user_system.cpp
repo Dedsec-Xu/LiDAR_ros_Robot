@@ -17,7 +17,7 @@ float angular_rad_min = 0.8;
 float angular_rad_max = 6.2;
 float angular_rad_cur = 1.0;
 
-float cmd_liner_vel_x = 10;
+float cmd_liner_vel_x = 0;
 float cmd_liner_vel_y = 0;
 float cmd_angular_rad_z = 0;
 
@@ -68,7 +68,7 @@ void user_system_init(){
 	HAL_IWDG_Refresh(&hiwdg1);
 	
 	HAL_TIM_Base_Start_IT(&htim6);
-	//print_usart1"user_system_init() End\r\n");
+	print_usart1("user_system_init() End\r\n");
 	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_RESET);
 	HAL_Delay(500);
 	//while(wait_imu--){
@@ -112,29 +112,20 @@ void user_system_init(){
 
 void user_system_thread_0(){
 	uint8_t rate = 10;
+	HAL_IWDG_Refresh(&hiwdg1);
+	print_usart1("user_system_thread_0() start...\r\n");
 	
-	//print_usart1("user_system_thread_0() start...\r\n");
-	xrobot->velocity_to_RPM(0.16,0.0);
-
-	HAL_Delay(1000);
-	xrobot->velocity_to_RPM(0.0, 0.0);
-
+	//xrobot->velocity_to_RPM(5.0,0.0);
+	/*for(int i = 0;i<5;i++){
+		HAL_IWDG_Refresh(&hiwdg1);
+		xrobot->velocity_to_RPM(0.32,0.0);
+		HAL_Delay(1000);
+	}*/
+	
+	
 	while(1){
 		user_delay_ms_start(&loop_tick);
-		// MPU6050_Get_Accel_Scale(&myAccelScaled);
-		// print_usart1("Accel: x:%.3f, y:%.3f, z:%.3f\r\n", myAccelScaled.x, myAccelScaled.y, myAccelScaled.z);
-		// HAL_IWDG_Refresh(&hiwdg1);
-		// MPU6050_Get_Gyro_Scale(&myGyroScaled);
-		// print_usart1("Gyro: x:%.3f, y:%.3f, z:%.3f\r\n", myGyroScaled.x, myGyroScaled.y, myGyroScaled.z);
-		// HAL_IWDG_Refresh(&hiwdg1);
-		// MPU6050_Get_Gyro_RawData(&myGyroRaw);
-		// //print_usart1("Gyro: x:%d, y:%d, z:%d\r\n", myGyroRow.x, myGyroRaw.y, myGyroRaw.z);
-		// print_usart1("Gyro: x:%d, y:%d, z:%d\r\n", myGyroRaw.x, myGyroRaw.y, myGyroRaw.z);
-		// HAL_IWDG_Refresh(&hiwdg1);
-		//HAL_Delay(500);
-		//HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_SET);
-		//print_usart1("%.2f,%.2f\r\n",cmd_liner_vel_x,cmd_angular_rad_z);
-		//xrobot->velocity_to_RPM(cmd_liner_vel_x,cmd_angular_rad_z);
+		xrobot->velocity_to_RPM(cmd_liner_vel_x,cmd_angular_rad_z);
 		//print_usart1("2\r\n");
 		HAL_IWDG_Refresh(&hiwdg1);
 		serial2_ros_data();
@@ -143,7 +134,7 @@ void user_system_thread_0(){
 		motor_driver::_i = set_i;
 		motor_driver::_d = set_d;
 		HAL_IWDG_Refresh(&hiwdg1);
-		
+		//print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
 		user_delay_ms_end(&loop_tick,1000/rate);
 		//print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
 	}
@@ -158,6 +149,7 @@ void serial2_ros_data(){
 	data.syn_CR = '\r';
 	data.syn_LF = '\n';
 	float *quar_rpy;
+	__HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE);
 	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_SET);
 	//print_usart1("4\r\n");
 	while(HAL_UART_GetState(&huart6) == HAL_UART_STATE_BUSY_TX_RX){
@@ -171,12 +163,12 @@ void serial2_ros_data(){
 	HAL_IWDG_Refresh(&hiwdg1);
 	HAL_UART_Transmit(&huart6,(uint8_t*)&data,sizeof(serialData),100);
 	//print_usart1("9\r\n");
-	//print_usart1("data: %x,%f\r\n",data.syn,xrobot->robot_linear_vel_x);
+	print_usart1("data: %f,%f\r\n",cmd_liner_vel_x,cmd_angular_rad_z);
 	HAL_IWDG_Refresh(&hiwdg1);
 	
 	quar_rpy = READ_DMP2();
 	HAL_IWDG_Refresh(&hiwdg1);
-	while(HAL_UART_GetState(&huart6) == HAL_UART_STATE_BUSY_TX_RX){//print_usart1("oops!\r\n")
+	while(HAL_UART_GetState(&huart6) == HAL_UART_STATE_BUSY_TX_RX){//print_usart1("oops!\r\n");
 	}
 	HAL_IWDG_Refresh(&hiwdg1);
 	data.type = VAL_IMU;
@@ -185,12 +177,15 @@ void serial2_ros_data(){
 	rpy_cur[1] = quar_rpy[5] + PI;
 	rpy_cur[2] = quar_rpy[6] + PI;
 
-
+	data.dat.vel.angular[0] = get_inc(rpy_last[0],rpy_cur[0],PI*2)*10;
+	data.dat.vel.angular[1] = get_inc(rpy_last[1],rpy_cur[1],PI*2)*10;
+	data.dat.vel.angular[2] = get_inc(rpy_last[2],rpy_cur[2],PI*2)*10;
 
 	
 	HAL_IWDG_Refresh(&hiwdg1);
 	//print_usart1("8\r\n");
 	HAL_UART_Transmit(&huart6,(uint8_t*)&data,sizeof(data),100);
+	//print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
 	//print_usart1("6\r\n");
 	//print_usart1("Roll [%f] Pitch[%f] Yaw[%f]\r\n",data.dat.vel.angular[0]*57.3,data.dat.vel.angular[1]*57.3,data.dat.vel.angular[2]*57.3);
 }

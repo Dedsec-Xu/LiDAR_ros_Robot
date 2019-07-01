@@ -2,13 +2,14 @@
 
 #define Millisecond() HAL_GetTick()
 #define constrain(value,low,high) ((value)<(low)?(low):((value)>(high)?(high):(value)))
+#define pwm_rpm_ratio 0.16f
 
 float motor_driver::_p = 0.2;
 float motor_driver::_i = 0.5;
 float motor_driver::_d = 0.3;
 
-float motor_driver::_ticks_per_rev = 1560;
-float motor_driver::_motor_max_rpm = 300;
+float motor_driver::_ticks_per_rev = 52;
+float motor_driver::_motor_max_rpm = 500;
 
 motor_driver::motor_driver(TIM_HandleTypeDef& encoder_htim,
                             int8_t encoder_direction,
@@ -44,23 +45,26 @@ motor_driver::motor_driver(TIM_HandleTypeDef& encoder_htim,
 void motor_driver::set_rpm(float rpm){
     int16_t _pwm;
     double err;
+    
+    // rpm_cur = read_rpm();
 
-    rpm_cur = read_rpm();
+    // err = constrain(rpm,-_motor_max_rpm,_motor_max_rpm) - rpm_cur;
+    // err_total += err;
 
-    err = constrain(rpm,-_motor_max_rpm,_motor_max_rpm) - rpm_cur;
-    err_total += err;
+    // err_total = constrain(err_total,-_pwm_max/_i,_pwm_max/_i);
+    // _pwm = _p*err + _i*err_total + _d*(err-err_previous);
 
-    err_total = constrain(err_total,-_pwm_max/_i,_pwm_max/_i);
-    _pwm = _p*err + _i*err_total + _d*(err-err_previous);
+    // err_previous = err;
 
-    err_previous = err;
-
+    _pwm = (int16_t)(rpm / pwm_rpm_ratio);
+    rpm_cur = rpm;
     _pwm = constrain(_pwm,-_pwm_max,_pwm_max);
 
     if(abs(_pwm)<40){
         _pwm = 0;
     }
     spin(_pwm);
+		print_usart1("%d\r\n",_pwm);
 }
 
 

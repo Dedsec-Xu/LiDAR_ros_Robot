@@ -1,12 +1,12 @@
 #include "user_robot_base_2.h"
 
-float robot_base::wheel_circumference = 0.068 * PI;// need wheel zhouchang measurement
-float robot_base::wgeel_base_width = 0.20;// need wheel kuandu measurement
+float robot_base::wheel_circumference = 0.123;// need wheel zhouchang measurement
+float robot_base::wgeel_base_width = 0.185;// need wheel kuandu measurement
 
 robot_base::robot_base()
 {
-    motor_RL = new motor_driver(htim2, 1, htim1, TIM_CHANNEL_2, 999, U1_1_GPIO_Port, U1_1_Pin, U1_2_Pin);
-    motor_RR = new motor_driver(htim3, -1, htim1, TIM_CHANNEL_1, 999, U2_1_GPIO_Port, U2_1_Pin, U2_2_Pin);
+    motor_RL = new motor_driver(htim3, 1, htim1, TIM_CHANNEL_2, 1500, U1_1_GPIO_Port, U1_1_Pin, U1_2_Pin);
+    motor_RR = new motor_driver(htim4, -1, htim1, TIM_CHANNEL_1, 1500, U2_1_GPIO_Port, U2_1_Pin, U2_2_Pin);
     robot_linear_vel_x = 0;
 }
 
@@ -21,7 +21,7 @@ void robot_base::velocity_to_RPM(float liner_vel_x, float angular_rad_z)
     static float angular_rad_z_min;
     static float tangential_vel;
     float scale = 1;
-
+    print_usart1("%f\r\n",liner_vel_x);
     linear_vel_x_min = liner_vel_x *60;
     angular_rad_z_min = angular_rad_z * 60;
 
@@ -47,7 +47,8 @@ void robot_base::velocity_to_RPM(float liner_vel_x, float angular_rad_z)
 
 void robot_base::run()
 {
-    motor_RL->set_rpm(motor_prm_RL);
+    print_usart1("%f\r\n",motor_prm_RL);
+    motor_RL->set_rpm(motor_prm_RL*1.13);
     motor_RR->set_rpm(motor_prm_RR);
     double average_rpm = (motor_RL->rpm_cur + motor_RR->rpm_cur)/2;
     double average_rps = average_rpm / 60;
