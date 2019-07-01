@@ -338,7 +338,7 @@
               <MiscControls>--cpp</MiscControls>
               <Define>USE_HAL_DRIVER,STM32H743xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc; ../Drivers/STM32H7xx_HAL_Driver/Inc; ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy; ../Drivers/CMSIS/Device/ST/STM32H7xx/Include; ../Drivers/CMSIS/Include; ../BSP</IncludePath>
+              <IncludePath>../Inc;     ../Drivers/STM32H7xx_HAL_Driver/Inc;     ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;     ../Drivers/CMSIS/Device/ST/STM32H7xx/Include;     ../Drivers/CMSIS/Include;     ../BSP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -636,6 +636,56 @@
               <FileName>user_gpio_i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\user_gpio_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>imu_mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\imu_mpu6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>imu_mpu6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\imu_mpu6050.h</FilePath>
+            </File>
+            <File>
+              <FileName>dmpKey.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\DMP\dmpKey.h</FilePath>
+            </File>
+            <File>
+              <FileName>dmpmap.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\DMP\dmpmap.h</FilePath>
+            </File>
+            <File>
+              <FileName>imu_dmp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\DMP\imu_dmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>imu_dmp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\DMP\imu_dmp.h</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\DMP\inv_mpu.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\DMP\inv_mpu.h</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\DMP\inv_mpu_dmp_motion_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>inv_mpu_dmp_motion_driver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\DMP\inv_mpu_dmp_motion_driver.h</FilePath>
             </File>
           </Files>
         </Group>

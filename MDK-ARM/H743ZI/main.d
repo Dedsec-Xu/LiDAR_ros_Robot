@@ -48,8 +48,17 @@ h743zi\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 h743zi\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 h743zi\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 h743zi\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+h743zi\main.o: ../BSP/user_protcol.h
+h743zi\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 h743zi\main.o: ../BSP/user_comm.h
 h743zi\main.o: ../BSP/user_system.h
 h743zi\main.o: ../BSP/driver_motor.h
 h743zi\main.o: ../BSP/driver_motor.h
 h743zi\main.o: ../BSP/user_robot_base_2.h
+h743zi\main.o: ../BSP/user_gpio_i2c.h
+h743zi\main.o: ../BSP/imu_mpu6050.h
+h743zi\main.o: ../BSP/DMP/imu_dmp.h
+h743zi\main.o: ../BSP/DMP/inv_mpu.h
+h743zi\main.o: ../BSP/DMP/inv_mpu_dmp_motion_driver.h
+h743zi\main.o: ../BSP/DMP/dmpKey.h
+h743zi\main.o: ../BSP/DMP/dmpmap.h
