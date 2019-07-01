@@ -1,0 +1,6 @@
+-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\lib\fwlib\head -I ..\..\lib\fwlib\source -I ..\..\lib\cmsis -I ..\..\user\head -I ..\..\user\source -I ..\..\utilities\STM32_EVAL -I ..\..\utilities\STM32_EVAL\STM32100E_EVAL -I ..\..\utilities\STM32_EVAL\Common -I ..\..\utilities\STM32_EVAL\STM32100B_EVAL -I ..\..\utilities\STM32_EVAL\STM3210B_EVAL -I ..\..\utilities\STM32_EVAL\STM3210C_EVAL -I ..\..\utilities\STM32_EVAL\STM3210E_EVAL -I ..\..\utilities\STM32_EVAL\STM32L152_EVAL
+-I"F:\electronic design\stm32\STM32 Practice\Modle V1.0\project\RVmdk\RTE"
+-I"F:\electronic design\Keil\ARM\PACK\ARM\CMSIS\5.0.0\CMSIS\Include"
+-I"F:\electronic design\Keil\ARM\PACK\Keil\STM32F1xx_DFP\2.1.0\Device\Include"
+-D__UVISION_VERSION="521" -D_RTE_ -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER -DUSE_STM3210E_EVAL
+-o "..\..\output of ram\stm32f10x_it.o" --omf_browse "..\..\output of ram\stm32f10x_it.crf" --depend "..\..\output of ram\stm32f10x_it.d" "..\..\user\source\stm32f10x_it.c"

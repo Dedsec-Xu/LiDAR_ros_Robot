@@ -21,6 +21,10 @@ void MPU6050_init()
     MPU6050_SetSleepModeStatus(DISABLE);
     SetI2CMasterModeEnabled(0);
     SetI2CBypass(0);
+    if (MPU6050_GetDeviceID() == 0x34) //0b110100; 8-bit representation in hex = 0x34
+        print_usart1("MPU6050_init()  SUCCESS\r\n");
+    else
+        print_usart1("MPU6050_init()  failedr\n");
 }
 
 /** Verify the I2C connection.
@@ -369,70 +373,70 @@ void MPU6050_I2C_BufferRead(uint8_t slaveAddr, uint8_t* pBuffer, uint8_t readAdd
  // ENTR_CRT_SECTION();
 
   /* While the bus is busy */
-//   while(I2C_GetFlagStatus(MPU6050_I2C, I2C_FLAG_BUSY));
+  while(I2C_GetFlagStatus(MPU6050_I2C, I2C_FLAG_BUSY));
 
-//   /* Send START condition */
-//   I2C_GenerateSTART(MPU6050_I2C, ENABLE);
+  /* Send START condition */
+  I2C_GenerateSTART(MPU6050_I2C, ENABLE);
 
-//   /* Test on EV5 and clear it */
-//   while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_MODE_SELECT));
+  /* Test on EV5 and clear it */
+  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_MODE_SELECT));
 
-//   /* Send MPU6050 address for write */
-//   I2C_Send7bitAddress(MPU6050_I2C, slaveAddr, I2C_Direction_Transmitter); 
+  /* Send MPU6050 address for write */
+  I2C_Send7bitAddress(MPU6050_I2C, slaveAddr, I2C_Direction_Transmitter); 
 
-//   /* Test on EV6 and clear it */
-//   while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+  /* Test on EV6 and clear it */
+  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
 
-//   /* Clear EV6 by setting again the PE bit */
-//   I2C_Cmd(MPU6050_I2C, ENABLE);
+  /* Clear EV6 by setting again the PE bit */
+  I2C_Cmd(MPU6050_I2C, ENABLE);
 
-//   /* Send the MPU6050's internal address to write to */
-//   I2C_SendData(MPU6050_I2C, readAddr);
+  /* Send the MPU6050's internal address to write to */
+  I2C_SendData(MPU6050_I2C, readAddr);
 
-//   /* Test on EV8 and clear it */
-//   while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+  /* Test on EV8 and clear it */
+  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
 
-//   /* Send STRAT condition a second time */
-//   I2C_GenerateSTART(MPU6050_I2C, ENABLE);
+  /* Send STRAT condition a second time */
+  I2C_GenerateSTART(MPU6050_I2C, ENABLE);
 
-//   /* Test on EV5 and clear it */
-//   while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_MODE_SELECT));
+  /* Test on EV5 and clear it */
+  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_MODE_SELECT));
 
-//   /* Send MPU6050 address for read */
-//   I2C_Send7bitAddress(MPU6050_I2C, slaveAddr, I2C_Direction_Receiver);
+  /* Send MPU6050 address for read */
+  I2C_Send7bitAddress(MPU6050_I2C, slaveAddr, I2C_Direction_Receiver);
 
-//   /* Test on EV6 and clear it */
-//   while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
+  /* Test on EV6 and clear it */
+  while(!I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
 
-//   /* While there is data to be read */
-//   while(NumByteToRead)
-//   {
-//     if(NumByteToRead == 1)
-//     {
-//       /* Disable Acknowledgement */
-//       I2C_AcknowledgeConfig(MPU6050_I2C, DISABLE);
+  /* While there is data to be read */
+  while(NumByteToRead)
+  {
+    if(NumByteToRead == 1)
+    {
+      /* Disable Acknowledgement */
+      I2C_AcknowledgeConfig(MPU6050_I2C, DISABLE);
 
-//       /* Send STOP Condition */
-//       I2C_GenerateSTOP(MPU6050_I2C, ENABLE);
-//     }
+      /* Send STOP Condition */
+      I2C_GenerateSTOP(MPU6050_I2C, ENABLE);
+    }
 
-//     /* Test on EV7 and clear it */
-//     if(I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_RECEIVED))
-//     {
-//       /* Read a byte from the MPU6050 */
-//       *pBuffer = I2C_ReceiveData(MPU6050_I2C);
+    /* Test on EV7 and clear it */
+    if(I2C_CheckEvent(MPU6050_I2C, I2C_EVENT_MASTER_BYTE_RECEIVED))
+    {
+      /* Read a byte from the MPU6050 */
+      *pBuffer = I2C_ReceiveData(MPU6050_I2C);
 
-//       /* Point to the next location where the byte read will be saved */
-//       pBuffer++;
+      /* Point to the next location where the byte read will be saved */
+      pBuffer++;
 
-//       /* Decrement the read bytes counter */
-//       NumByteToRead--;
-//     }
-//   }
+      /* Decrement the read bytes counter */
+      NumByteToRead--;
+    }
+  }
 
-//   /* Enable Acknowledgement to be ready for another reception */
-//   I2C_AcknowledgeConfig(MPU6050_I2C, ENABLE);
-// //  EXT_CRT_SECTION();
+  /* Enable Acknowledgement to be ready for another reception */
+  I2C_AcknowledgeConfig(MPU6050_I2C, ENABLE);
+//  EXT_CRT_SECTION();
 
 }
 

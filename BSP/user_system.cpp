@@ -1,5 +1,6 @@
 #include "user_system.h"
 #include "user_protcol.h"
+#include "TJ_MPU6050.h"
 
 #define IMU_PUBLISH_RATE 10
 #define VEL_PUBLISH_RATE 10
@@ -25,7 +26,10 @@ float set_p = motor_driver::_p;
 float set_i = motor_driver::_i;
 float set_d = motor_driver::_d;
 
-uint32_t loop_tick;
+RawData_Def myAccelRaw, myGyroRaw;
+ScaledData_Def myAccelScaled, myGyroScaled;
+
+int32_t loop_tick;
 robot_base *xrobot;
 
 #define user_delay_ms_start(t) *t = HAL_GetTick()
@@ -44,8 +48,16 @@ void user_system_init(){
 	xrobot = new robot_base;
 	//IIC_Init();
 	HAL_Delay(50);
-	//MPU6050_init();
+	//MPU6050_init()
+	MPU_ConfigTypeDef myMpuConfig;
+	myMpuConfig.Accel_Full_Scale = AFS_SEL_4g;
+	myMpuConfig.ClockSource = Internal_8MHz;
+	myMpuConfig.CONFIG_DLPF = DLPF_184A_188G_Hz;
+	myMpuConfig.Gyro_Full_Scale = FS_SEL_500;
+	myMpuConfig.Sleep_Mode_Bit = 0;
+	MPU6050_init2(&hi2c1, &myMpuConfig);
 	//DMP_init();
+
 
 	HAL_IWDG_Refresh(&hiwdg1);
 	user_comm_init();
@@ -54,7 +66,7 @@ void user_system_init(){
 	
 	while(wait_imu--){
 		Read_DMP();
-		sprintf(show,"DMP callbration %3d",wait_imu);
+		// sprintf(show,"DMP callbration %3d",wait_imu);
 		HAL_IWDG_Refresh(&hiwdg1);
 		HAL_Delay(100);
 	}
@@ -94,12 +106,16 @@ void user_system_init(){
 void user_system_thread_0(){
 	uint8_t rate = 10;
 	print_usart1("user_system_thread_0() start...\r\n");
-	xrobot->velocity_to_RPM(0.0,10.0);
+	// xrobot->velocity_to_RPM(0.0,10.0);
 	while(1){
 		user_delay_ms_start(&loop_tick);
 		
 		xrobot->velocity_to_RPM(1.0,0.0);
 		serial2_ros_data();
+		MPU6050_Get_Accel_Scale(&myAccelScaled);
+		print_usart1("Accel: x:%.3f, y:%.3f, z:%.3f\r\n", myAccelScaled.x, myAccelScaled.y, myAccelScaled.z);
+
+		myAccelRaw
 		motor_driver::_p = set_p;
 		motor_driver::_i = set_i;
 		motor_driver::_d = set_d;

@@ -51,13 +51,16 @@ int IIC_Start(void)
 {
     SDA_OUT();
     IIC_SDA_HIGH;
-    if (!READ_SDA) return 0;
+    if (!READ_SDA)
+        return 0;
     IIC_SCL_HIGH;
     delay_us(1);
     IIC_SDA_LOW;
-    if (READ_SDA) return 0;
+    if (READ_SDA)
+        return 0;
     delay_us(1);
     IIC_SCL_LOW;
+    print_usart1("IIC_Started");
     return 1;
 }
 
