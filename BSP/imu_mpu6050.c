@@ -1,7 +1,7 @@
 /* Includes */
 #include "imu_mpu6050.h"
 #include "user_gpio_i2c.h"
-
+#include "user_comm.h"
 /** @defgroup MPU6050_Library
 * @{
 */
@@ -19,6 +19,7 @@ void MPU6050_init()
     MPU6050_SetFullScaleGyroRange(MPU6050_GYRO_FS_250);
     MPU6050_SetFullScaleAccelRange(MPU6050_ACCEL_FS_2);
     MPU6050_SetSleepModeStatus(DISABLE);
+        
     SetI2CMasterModeEnabled(0);
     SetI2CBypass(0);
 }

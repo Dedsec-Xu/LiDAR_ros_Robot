@@ -39,29 +39,28 @@ motor_driver::motor_driver(TIM_HandleTypeDef& encoder_htim,
     tick_total = 0;
     tick_last = 0;
     HAL_TIM_Encoder_Start(&_encoder_htim,TIM_CHANNEL_ALL);
-} 
+}
 
 void motor_driver::set_rpm(float rpm){
     int16_t _pwm;
-    // double err;
+    double err;
 
-    // rpm_cur = read_rpm();
+    rpm_cur = read_rpm();
 
-    // err = constrain(rpm,-_motor_max_rpm,_motor_max_rpm) - rpm_cur;
-    // err_total += err;
+    err = constrain(rpm,-_motor_max_rpm,_motor_max_rpm) - rpm_cur;
+    err_total += err;
 
-    // err_total = constrain(err_total,-_pwm_max/_i,_pwm_max/_i);
-    // _pwm = _p*err + _i*err_total + _d*(err-err_previous);
+    err_total = constrain(err_total,-_pwm_max/_i,_pwm_max/_i);
+    _pwm = _p*err + _i*err_total + _d*(err-err_previous);
 
-    // err_previous = err;
-    _pwm = 50;
-    _pwm = constrain(_pwm, -_pwm_max, _pwm_max);
+    err_previous = err;
+
+    _pwm = constrain(_pwm,-_pwm_max,_pwm_max);
 
     if(abs(_pwm)<40){
         _pwm = 0;
     }
- 
-    pin(_pwm);
+    spin(_pwm);
 }
 
 
@@ -90,6 +89,7 @@ double motor_driver::read_rpm(){
 	delta_mins_time = (cur_milli_time - last_milli_time)/60000.0;
 	rpm_cur = (tick_cur / _ticks_per_rev) / delta_mins_time;
 	last_milli_time = cur_milli_time;
+    //print_usart1("{%8.4f | %4d|%4d}\r\n",rpm_cur,tick_inc,tick_cur);
 	return rpm_cur;
 }
 

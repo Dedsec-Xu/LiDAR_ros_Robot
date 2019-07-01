@@ -1,23 +1,49 @@
 #include "user_gpio_i2c.h"
+#include "user_comm.h"
 
 GPIO_TypeDef *gpio_i2c_scl_gpiox;
 uint16_t gpio_i2c_scl_pin;
 GPIO_TypeDef *gpio_i2c_sda_gpiox;
 uint16_t gpio_i2c_sda_pin;
 
-#define IIC_SCL_LOW     (gpio_i2c_scl_gpiox->BSRR = gpio_i2c_scl_pin<<16)//xjb cai de 
+#define IIC_SCL_LOW     (gpio_i2c_scl_gpiox->BSRR = gpio_i2c_scl_pin)//xjb cai de 
 #define IIC_SCL_HIGH    (gpio_i2c_scl_gpiox->BSRR = gpio_i2c_scl_pin)
-#define IIC_SDA_LOW     (gpio_i2c_sda_gpiox->BSRR = gpio_i2c_sda_pin<<16)
+#define IIC_SDA_LOW     (gpio_i2c_sda_gpiox->BSRR = gpio_i2c_sda_pin)
 #define IIC_SDA_HIGH    (gpio_i2c_sda_gpiox->BSRR = gpio_i2c_sda_pin)
 
 
-#define READ_SDA        (gpio_i2c_sda_gpiox->IDR &gpio_i2c_sda_pin)
+#define READ_SDA        (gpio_i2c_sda_gpiox->IDR & gpio_i2c_sda_pin)
 
 
 #define SDA_IN() {SDA_GPIO_Port->OTYPER &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 8 << 12;}
 
 
-#define SDA_OUT() {SCL_GPIO_Port->OTYPER &= 0XFFFF0FFF;SCL_GPIO_Port->OTYPER |= 3 << 12;}
+#define SDA_OUT() {SDA_GPIO_Port->OTYPER &= 0XFFFF0FFF;SDA_GPIO_Port->OTYPER |= 3 << 12;}
+
+// void SDA_IN(void)
+// {
+//     GPIO_InitTypeDef GPIO_InitStructure;
+//     //RCC->APB2ENR|=1<<4;//先使能外设IO portc时钟
+//     //RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA,ENABLE);
+ 
+//     GPIO_InitStructure.Pin = SDA_Pin;
+//     GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
+//     GPIO_InitStructure.Pull = GPIO_NOPULL;
+//     HAL_GPIO_Init(GPIOC,&GPIO_InitStructure);
+ 
+// }
+ 
+// void SDA_OUT(void)
+// {
+//     GPIO_InitTypeDef GPIO_InitStructure;
+//     //RCC->APB2ENR|=1<<4;//先使能外设IO portc时钟
+//     //RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA,ENABLE);
+ 
+//     GPIO_InitStructure.Pin = SDA_Pin;
+//     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+//     HAL_GPIO_Init(GPIOC,&GPIO_InitStructure);
+ 
+// }
 
 void IIC_Init()
 {
@@ -36,17 +62,21 @@ void delay_us(uint32_t us)
     }
 }
 
+
 int IIC_Start(void)
 {
     SDA_OUT();
     IIC_SDA_HIGH;
-    if (!READ_SDA) return 0;
+    if (!READ_SDA)
+        return 0;
     IIC_SCL_HIGH;
     delay_us(1);
     IIC_SDA_LOW;
-    if (READ_SDA) return 0;
+    if (READ_SDA)
+        return 0;
     delay_us(1);
     IIC_SCL_LOW;
+    //print_usart1("IIC_Started");
     return 1;
 }
 
@@ -115,11 +145,13 @@ int IIC_Wait_Ack(void)
         if (ucErrTime > 50)
         {
             IIC_Stop();
+            print_usart1("%x\r\n",READ_SDA);
             return 0;
         }
         delay_us(1);
     }
     IIC_SCL_LOW;
+    print_usart1("!!\r\n");
     return 1;
 }
 
@@ -136,14 +168,14 @@ void IIC_Ack(void)
 
 void IIC_NAck(void)
 {
-    SDA_OUT();
+
     IIC_SCL_LOW; // SCL=0
+    SDA_OUT();
     IIC_SDA_HIGH; // SDA=1
     delay_us(1);
     IIC_SCL_HIGH; // SCL=1
     delay_us(1);
     IIC_SCL_LOW; // SCL=0
-    delay_us(1);
 }
 
 int i2cWrite(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *data)
@@ -151,6 +183,7 @@ int i2cWrite(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *data)
     int i;
     if (!IIC_Start())
     {
+        print_usart1("????\r\n");
         return 1;
     }
         
@@ -158,6 +191,7 @@ int i2cWrite(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *data)
     if (!IIC_Wait_Ack())
     {
         IIC_Stop();
+        print_usart1("???\r\n");
         return 1;
     }
     IIC_Send_Byte(reg);
@@ -167,11 +201,13 @@ int i2cWrite(uint8_t addr, uint8_t reg, uint8_t len, uint8_t *data)
         IIC_Send_Byte(data[i]);
         if (!IIC_Wait_Ack())
         {
+            print_usart1("??\r\n");
             IIC_Stop();
             return 0;
         }
     }
     IIC_Stop();
+    print_usart1("?\r\n");
     return 0;
 }
 

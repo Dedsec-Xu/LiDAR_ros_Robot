@@ -718,15 +718,17 @@ int mpu_init(struct int_param_s *int_param)
 
     /* Reset device. */
     data[0] = BIT_RESET;
-    if (i2c_write(st.hw->addr, st.reg->pwr_mgmt_1, 1, data))
-        return -1;
+    if (i2c_write(st.hw->addr, st.reg->pwr_mgmt_1, 1, data)){
+        print_usart1("oops1!\r\n");
+        return -1;}
     delay_ms(100);
 
     /* Wake up chip. */
     data[0] = 0x00;
-    if (i2c_write(st.hw->addr, st.reg->pwr_mgmt_1, 1, data))
+    if (i2c_write(st.hw->addr, st.reg->pwr_mgmt_1, 1, data)){
+        print_usart1("oops!\r\n");
         return -1;
-
+    }
    st.chip_cfg.accel_half = 0;
 
 #ifdef MPU6500

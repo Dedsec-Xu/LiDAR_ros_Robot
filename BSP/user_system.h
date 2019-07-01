@@ -23,12 +23,13 @@
 #include "driver_motor.h"
 #include "user_robot_base_2.h"
 #include "user_gpio_i2c.h"
-
+#include "Read_dmp.h"
 #define MPU6050
 #define EMPL_TARGET_STM32F4
 #include "imu_mpu6050.h"
 //#include "imu.h"
-#include "DMP/imu_dmp.h"
+//#include "DMP/imu_dmp.h"
+#include "TJ_MPU6050.h"
 #define SYSTEM_VER 0x1708 //maybe need to change
 #define PI 3.1415926535898
 #define DEBUG

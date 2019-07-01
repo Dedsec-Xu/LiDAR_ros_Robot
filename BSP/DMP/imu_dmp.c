@@ -1,5 +1,4 @@
 #include "imu_dmp.h"
-
 #define PRINT_ACCEL     (0x01)
 #define PRINT_GYRO      (0x02)
 #define PRINT_QUAT      (0x04)
@@ -44,23 +43,28 @@ struct rx_s {
     unsigned char cmd;
 };
 struct hal_s {
-    unsigned char lp_accel_mode;
+    //unsigned char lp_accel_mode;
     unsigned char sensors;
     unsigned char dmp_on;
     unsigned char wait_for_tap;
     volatile unsigned char new_gyro;
-    unsigned char motion_int_mode;
-    unsigned long no_dmp_hz;
-    unsigned long next_pedo_ms;
-    unsigned long next_temp_ms;
-    unsigned long next_compass_ms;
+    // unsigned char motion_int_mode;
+    // unsigned long no_dmp_hz;
+    // unsigned long next_pedo_ms;
+    // unsigned long next_temp_ms;
+    // unsigned long next_compass_ms;
     unsigned int report;
     unsigned short dmp_features;
     struct rx_s rx;
 };
 
+static struct hal_s hal = {0};
 
-
+/* USB RX binary semaphore. Actually, it's just a flag. Not included in struct
+ * because it's declared extern elsewhere.
+ */
+volatile unsigned char rx_new;
+unsigned char *mpl_key = (unsigned char*)"eMPL 5.1";
 /* Platform-specific information. Kinda like a boardfile. */
 struct platform_data_s {
     signed char orientation[9];

@@ -20,7 +20,7 @@ typedef signed short s16;
 #define MPU6050_I2C_Port             SCL_GPIO_Port
 #define MPU6050_I2C_SCL_Pin          SCL_Pin
 #define MPU6050_I2C_SDA_Pin          SDA_Pin
-#define MPU6050_I2C_RCC_Port         RCC_APB2Periph_GPIOB
+#define MPU6050_I2C_RCC_Port         RCC_APB2_DIV1
 #define MPU6050_I2C_Speed            100000 // 100kHz standard mode
 
 #define MPU6050_ADDRESS_AD0_LOW     0x68 // address pin low (GND), default for InvenSense evaluation board
