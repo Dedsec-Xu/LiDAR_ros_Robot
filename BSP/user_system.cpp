@@ -68,7 +68,7 @@ void user_system_init(){
 	HAL_IWDG_Refresh(&hiwdg1);
 	
 	HAL_TIM_Base_Start_IT(&htim6);
-	//print_usart1("user_system_init() End\r\n");
+	//print_usart1"user_system_init() End\r\n");
 	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_RESET);
 	HAL_Delay(500);
 	//while(wait_imu--){
@@ -114,7 +114,11 @@ void user_system_thread_0(){
 	uint8_t rate = 10;
 	
 	//print_usart1("user_system_thread_0() start...\r\n");
-	//xrobot->velocity_to_RPM(100.0,10.0);
+	xrobot->velocity_to_RPM(0.16,0.0);
+
+	HAL_Delay(1000);
+	xrobot->velocity_to_RPM(0.0, 0.0);
+
 	while(1){
 		user_delay_ms_start(&loop_tick);
 		// MPU6050_Get_Accel_Scale(&myAccelScaled);
@@ -130,7 +134,7 @@ void user_system_thread_0(){
 		//HAL_Delay(500);
 		//HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_SET);
 		//print_usart1("%.2f,%.2f\r\n",cmd_liner_vel_x,cmd_angular_rad_z);
-		xrobot->velocity_to_RPM(cmd_liner_vel_x,cmd_angular_rad_z);
+		//xrobot->velocity_to_RPM(cmd_liner_vel_x,cmd_angular_rad_z);
 		//print_usart1("2\r\n");
 		HAL_IWDG_Refresh(&hiwdg1);
 		serial2_ros_data();
@@ -172,7 +176,7 @@ void serial2_ros_data(){
 	
 	quar_rpy = READ_DMP2();
 	HAL_IWDG_Refresh(&hiwdg1);
-	while(HAL_UART_GetState(&huart6) == HAL_UART_STATE_BUSY_TX_RX){//print_usart1("oops!\r\n");
+	while(HAL_UART_GetState(&huart6) == HAL_UART_STATE_BUSY_TX_RX){//print_usart1("oops!\r\n")
 	}
 	HAL_IWDG_Refresh(&hiwdg1);
 	data.type = VAL_IMU;
@@ -181,9 +185,7 @@ void serial2_ros_data(){
 	rpy_cur[1] = quar_rpy[5] + PI;
 	rpy_cur[2] = quar_rpy[6] + PI;
 
-	data.dat.vel.angular[0] = get_inc(rpy_last[0],rpy_cur[0],PI*2)*10;
-	data.dat.vel.angular[1] = get_inc(rpy_last[1],rpy_cur[1],PI*2)*10;
-	data.dat.vel.angular[2] = get_inc(rpy_last[2],rpy_cur[2],PI*2)*10;
+
 
 	
 	HAL_IWDG_Refresh(&hiwdg1);

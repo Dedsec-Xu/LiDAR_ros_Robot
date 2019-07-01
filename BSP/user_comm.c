@@ -69,7 +69,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 		//print_usart1("new cmd_vel_x:%2.2f,new cmd_rad_z:%2.2f",cmd_liner_vel_x,cmd_angular_rad_z);
 		do{
 			//print_usart1("1\r\n");
-		}while(HAL_OK != HAL_UART_Receive_IT(&huart6,(uint8_t*)&serial_rx_data,1));
+		}while(HAL_OK != HAL_UART_Receive_IT(&huart6,(uint8_t*)&serial_rx_data,), sizeof(serialData));
 		HAL_IWDG_Refresh(&hiwdg1);
 	}
 }

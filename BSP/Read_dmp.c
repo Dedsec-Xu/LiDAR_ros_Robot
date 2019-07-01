@@ -27,9 +27,9 @@ float * READ_DMP2(void)
     gx = myGyroScaled2.x;
     gy = myGyroScaled2.y;
     gz = myGyroScaled2.z;
-    ax = myAccelScaled2.x;
-    ay = myAccelScaled2.y;
-    az = myAccelScaled2.z;
+    ax = myAccelScaled2.x/1000.0f;
+    ay = myAccelScaled2.y/1000.0f;
+    az = myAccelScaled2.z/1000.0f;
 
     
 
@@ -61,7 +61,7 @@ float * READ_DMP2(void)
     gx = gx + Kp*ex + exInt; 
     gy = gy + Kp*ey + eyInt; 
     gz = gz + Kp*ez + ezInt; 
-    //四元数微分方程，其中T为测量周期，为陀螺仪角速度，以下都是已知量，这里使用了一阶龙哥库塔求解四元数微分方程：
+    //四元数微分方程，其中T为测量周期，为陀螺仪角速度，以下都是已知量，这里使用了求解四元数微分方程：
     //integrate quaternion rate and normalise 
     q0 = q0 + (-q1*gx - q2*gy - q3*gz)*halfT; 
     q1 = q1 + (q0*gx + q2*gz - q3*gy)*halfT; 
