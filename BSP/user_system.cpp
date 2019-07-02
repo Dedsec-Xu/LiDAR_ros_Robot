@@ -122,9 +122,11 @@ void user_system_thread_0(){
 		HAL_Delay(1000);
 	}*/
 	
-	
+	uint8_t value;
 	while(1){
 		user_delay_ms_start(&loop_tick);
+		HAL_UART_Receive_IT(&huart6, (uint8_t *)&value,1);
+
 		xrobot->velocity_to_RPM(cmd_liner_vel_x,cmd_angular_rad_z);
 		//print_usart1("2\r\n");
 		HAL_IWDG_Refresh(&hiwdg1);
@@ -134,6 +136,7 @@ void user_system_thread_0(){
 		motor_driver::_i = set_i;
 		motor_driver::_d = set_d;
 		HAL_IWDG_Refresh(&hiwdg1);
+  //MX_USART6_UART_Init();
 		//print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
 		user_delay_ms_end(&loop_tick,1000/rate);
 		//print_usart1("run time %dms\r\n",HAL_GetTick() - loop_tick);
@@ -149,7 +152,8 @@ void serial2_ros_data(){
 	data.syn_CR = '\r';
 	data.syn_LF = '\n';
 	float *quar_rpy;
-	__HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE);
+	//print_usart1("size of data %d\r\n",sizeof(serialData));
+	//__HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE);
 	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,GPIO_PIN_SET);
 	//print_usart1("4\r\n");
 	while(HAL_UART_GetState(&huart6) == HAL_UART_STATE_BUSY_TX_RX){
@@ -163,7 +167,7 @@ void serial2_ros_data(){
 	HAL_IWDG_Refresh(&hiwdg1);
 	HAL_UART_Transmit(&huart6,(uint8_t*)&data,sizeof(serialData),100);
 	//print_usart1("9\r\n");
-	print_usart1("data: %f,%f\r\n",cmd_liner_vel_x,cmd_angular_rad_z);
+	//print_usart1("data: %f,%f\r\n",cmd_liner_vel_x,cmd_angular_rad_z);
 	HAL_IWDG_Refresh(&hiwdg1);
 	
 	quar_rpy = READ_DMP2();

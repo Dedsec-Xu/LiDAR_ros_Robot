@@ -60,8 +60,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define PS2_DI_Pin GPIO_PIN_0
 #define PS2_DI_GPIO_Port GPIOF
-#define U3_1_Pin GPIO_PIN_1
-#define U3_1_GPIO_Port GPIOF
 #define PS2_D0_Pin GPIO_PIN_2
 #define PS2_D0_GPIO_Port GPIOF
 #define U4_1_Pin GPIO_PIN_4

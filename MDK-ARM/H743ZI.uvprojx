@@ -338,7 +338,7 @@
               <MiscControls>--cpp</MiscControls>
               <Define>USE_HAL_DRIVER,STM32H743xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;     ../Drivers/STM32H7xx_HAL_Driver/Inc;     ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;     ../Drivers/CMSIS/Device/ST/STM32H7xx/Include;     ../Drivers/CMSIS/Include;     ../BSP</IncludePath>
+              <IncludePath>../Inc;          ../Drivers/STM32H7xx_HAL_Driver/Inc;          ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;          ../Drivers/CMSIS/Device/ST/STM32H7xx/Include;          ../Drivers/CMSIS/Include;          ../BSP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -686,6 +686,26 @@
               <FileName>inv_mpu_dmp_motion_driver.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\BSP\DMP\inv_mpu_dmp_motion_driver.h</FilePath>
+            </File>
+            <File>
+              <FileName>TJ_MPU6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\TJ_MPU6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>TJ_MPU6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\TJ_MPU6050.h</FilePath>
+            </File>
+            <File>
+              <FileName>Read_dmp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\Read_dmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>Read_dmp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\Read_dmp.h</FilePath>
             </File>
           </Files>
         </Group>

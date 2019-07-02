@@ -1,5 +1,6 @@
 #include "user_comm.h"
 
+
 uint8_t rxbuf1[128],rxbuf2[128];
 uint8_t rx1_len,rx2_len;
 serialData serial_rx_data;
@@ -27,10 +28,11 @@ void print_usart1(const char *format, ...){
 	
 #endif
 }
-
+static int i = 0;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	//int i = 0;
+
 	if(huart == &huart6){
+		//print_usart1("%d\n",++i);
 		//print_usart1("something happen!\r\n");
 		if(serial_rx_data.syn != _SERIAL_SYN_CODE_START){
 			do{
@@ -41,7 +43,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 		HAL_IWDG_Refresh(&hiwdg1);
 		if(serial_rx_data.syn == _SERIAL_SYN_CODE_START && serial_rx_data.syn_CR != '\r' && serial_rx_data.syn_LF != '\n'){
 			do{
-				//print_usart1("%d\n",++i);
+				//
 			}while(HAL_OK != HAL_UART_Receive_IT(&huart6,(uint8_t*)&serial_rx_data + 1,sizeof(serialData) - 1));
 			return;
 		}
@@ -66,11 +68,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 			set_d = serial_rx_data.dat.pid[2];
 		}
 		serial_rx_data.syn = serial_rx_data.syn_CR = serial_rx_data.syn_LF = serial_rx_data.type = 0;
-		//print_usart1("new cmd_vel_x:%2.2f,new cmd_rad_z:%2.2f",cmd_liner_vel_x,cmd_angular_rad_z);
+		//print_usart1("new cmd_vel_x:%2.2f,new cmd_rad_z:%2.2f\r\n",cmd_liner_vel_x,cmd_angular_rad_z);
 		do{
-		// 	// HAL_IWDG_Refresh(&hiwdg1);
-		// 	// print_usart1("%d\r\n",HAL_UART_Receive_IT(&huart6,(uint8_t*)&serial_rx_data,sizeof(serialData)));
+			//HAL_IWDG_Refresh(&hiwdg1);
+			//print_usart1("%d\r\n",sizeof(serialData));
 		}while(HAL_OK != HAL_UART_Receive_IT(&huart6,(uint8_t*)&serial_rx_data,sizeof(serialData)));
-		
+		//USART_ClearFlag( &huart6, 8);
 	}
 }

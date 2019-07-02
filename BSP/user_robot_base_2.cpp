@@ -21,7 +21,7 @@ void robot_base::velocity_to_RPM(float liner_vel_x, float angular_rad_z)
     static float angular_rad_z_min;
     static float tangential_vel;
     float scale = 1;
-    print_usart1("%f\r\n",liner_vel_x);
+    //print_usart1("%f\r\n",liner_vel_x);
     linear_vel_x_min = liner_vel_x *60;
     angular_rad_z_min = angular_rad_z * 60;
 
@@ -47,7 +47,7 @@ void robot_base::velocity_to_RPM(float liner_vel_x, float angular_rad_z)
 
 void robot_base::run()
 {
-    print_usart1("%f\r\n",motor_prm_RL);
+    //print_usart1("%f\r\n",motor_prm_RL);
     motor_RL->set_rpm(motor_prm_RL*1.13);
     motor_RR->set_rpm(motor_prm_RR);
     double average_rpm = (motor_RL->rpm_cur + motor_RR->rpm_cur)/2;

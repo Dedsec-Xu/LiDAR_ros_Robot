@@ -44,6 +44,8 @@
 "h743zi\imu_dmp.o"
 "h743zi\inv_mpu.o"
 "h743zi\inv_mpu_dmp_motion_driver.o"
+"h743zi\tj_mpu6050.o"
+"h743zi\read_dmp.o"
 --library_type=microlib --strict --scatter "H743ZI\H743ZI.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

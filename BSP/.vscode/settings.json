@@ -2,5 +2,6 @@
     "files.associations": {
         "cmath": "c",
         "log.h": "c"
-    }
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

@@ -1065,7 +1065,7 @@ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, u
     }
 
     /* Process Locked */
-    __HAL_LOCK(huart);
+    //__HAL_LOCK(huart);
 
     huart->ErrorCode = HAL_UART_ERROR_NONE;
     huart->gState = HAL_UART_STATE_BUSY_TX;
@@ -1116,7 +1116,7 @@ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, u
     huart->gState = HAL_UART_STATE_READY;
 
     /* Process Unlocked */
-    __HAL_UNLOCK(huart);
+    //__HAL_UNLOCK(huart);
 
     return HAL_OK;
   }
@@ -1307,7 +1307,7 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
     }
 
     /* Process Locked */
-    __HAL_LOCK(huart);
+    //__HAL_LOCK(huart);
 
     huart->pRxBuffPtr  = pData;
     huart->RxXferSize  = Size;
@@ -1337,7 +1337,7 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
       }
 
       /* Process Unlocked */
-      __HAL_UNLOCK(huart);
+      //__HAL_UNLOCK(huart);
 
       /* Enable the UART Parity Error interrupt and RX FIFO Threshold interrupt */
       SET_BIT(huart->Instance->CR1, USART_CR1_PEIE);
@@ -1356,7 +1356,7 @@ HAL_StatusTypeDef HAL_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData,
       }
 
       /* Process Unlocked */
-      __HAL_UNLOCK(huart);
+      //__HAL_UNLOCK(huart);
 
       /* Enable the UART Parity Error interrupt and Data Register Not Empty interrupt */
       SET_BIT(huart->Instance->CR1, USART_CR1_PEIE | USART_CR1_RXNEIE_RXFNEIE);
