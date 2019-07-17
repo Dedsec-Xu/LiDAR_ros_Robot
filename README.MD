@@ -1,6 +1,5 @@
 # LiDAR ROS Wireless Charging Robot
 
- [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Dedsec-Xu/ros_robot_base.svg)](https://github.com/Dedsec-Xu/ros_robot_base) 
 
 ---
 
